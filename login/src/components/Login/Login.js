@@ -66,6 +66,7 @@ const Login = ({ text }) => {
               theme="dark"
             />
             <RoundBtn text="Login" />
+            <a className="text-center col-sm-12 d-block" href={`/signup`}>Signup</a>
           </form>
         </div>
       </div>

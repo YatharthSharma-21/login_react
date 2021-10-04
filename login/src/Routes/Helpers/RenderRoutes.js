@@ -1,13 +1,31 @@
 import { Route, Switch } from "react-router-dom";
-import { RouteWithSubRoutes } from "../routes";
+import Login from "../../components/Login/Login";
+import SignIn from "../../components/SignIn/SignIn";
+import { Dashboard } from "../routes";
 
-const RenderRoutes = ({ routes }) => {
+
+
+const RenderRoutes = ({}) => {
+
+
+
   return (
     <Switch>
-      {routes.map((route, i) => {
-        return <RouteWithSubRoutes key={route.key} {...route} />;
-      })}
-      <Route component={() => <h1>Not Found!</h1>} />
+      <Route
+        path={"/login"}
+        exact={true}
+        render={(props) => <Login {...props} />}
+      />
+      <Route
+        path={"/signup"}
+        exact={true}
+        render={(props) => <SignIn {...props} />}
+      />
+      <Route
+        path={"/"}        
+        render={(props) => <Dashboard {...props} />}
+      />
+     
     </Switch>
   );
 };

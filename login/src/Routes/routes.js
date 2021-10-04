@@ -1,12 +1,10 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
+import NavBar from "../components/NavBar";
+import SaveFile from "../components/SaveFile";
 
 
-import NavBar from '../components/NavBar';
-import SaveFile from '../components/SaveFile';
-import Login from '../components/Login/Login';
-import SignIn from "../components/SignIn/SignIn";
+
 
 //Higher Order Components
 const RouteWithSubRoutes = (route) => {
@@ -19,75 +17,33 @@ const RouteWithSubRoutes = (route) => {
   );
 };
 
+const isAuth = localStorage.getItem("token");
+
+
 const Dashboard = ({ routes }) => {
-  
+  console.log("isAuth", routes);
+  if (!isAuth) {
+    return <Redirect to={"/login"} />;
+  }
   return (
     <div className="dashboard">
-      {
-        routes.Nav &&  <NavBar />  
-      }
-     
-          <Switch>
-            {routes.map((route, i) => {
-              
-              return <RouteWithSubRoutes key={i} {...route} />;
-              
-            })}
-            
-          </Switch>     
+      <NavBar />
+
+      <Switch>
+        <Route
+          path={"/"}
+          // exact={true}
+          render={(props) => <SaveFile {...props} />}
+        />
+
+      </Switch>
     </div>
   );
 };
 
-
 //Routing Logic
 
-const ROUTES = [
-  {
-    path: "/",
-    key: "welcome",
-    component: Dashboard,
-    routes: [
-      {
-        path: "/",
-        exact: true,
-        Nav: false,
-        component: () => <Login />,        
-      },   
-      {
-        path: "/login",
-        exact: true,
-        Nav: false,
-        component: () => <Login />,        
-      },
-      {
-        path: "/signup",
-        exact: true,
-        Nav: false,
-        component: () => <SignIn />,        
-      },   
-      {
-        path: "/dashboard",
-        exact: true,
-        Nav: true,
-        component: () => <SaveFile />,
-        icon: "fas fa-home",
-        title: "Home",
-      },
-      // {
-      //   path: "/details/:id",
-      //   exact: true,
-      //   component: () => <Details />,
-      // },     
-      // {
-      //   path: "/upload/movies",
-      //   exact: true,
-      //   component: () => <UploadMovies />,
-      // },   
-      ]
-     
-  }
-];
 
-export default ROUTES;
-export { RouteWithSubRoutes };
+
+export { RouteWithSubRoutes, Dashboard };
+

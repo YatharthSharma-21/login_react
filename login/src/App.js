@@ -1,35 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
-
+import axios from "axios";
+import { Loading, Notify } from "notiflix";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Notify, Loading } from "notiflix";
-import RenderRoutes from "./Routes/Helpers/RenderRoutes";
-import ROUTES from "./Routes/routes";
-import { BrowserRouter as Router } from "react-router-dom";
+import {
+  BrowserRouter as Router, Redirect, Route, Switch
+} from "react-router-dom";
+import "./App.css";
+import Login from "./components/Login/Login";
+import SignIn from "./components/SignIn/SignIn";
+import { verify_user } from "./redux/actions/userAction";
+import { SET_APP_LOADED } from "./redux/constants/userCons";
+import { Dashboard } from "./Routes/routes";
 
-import axios from "axios";
-axios.defaults.baseURL = 'http://localhost:5000/';
+
+axios.defaults.baseURL = "http://localhost:5000/";
 
 function App() {
   const dispatch = useDispatch();
 
   const alerts = useSelector((state) => state.alert);
   const loading = useSelector((state) => state.loading.isLoading);
+  const { userData, loaded } = useSelector((state) => state.user);
 
   const [doneAlerts, setDoneAlerts] = useState([]);
 
-  // useEffect(() => {
-  //   dispatch(loadUser());
-  //   dispatch(getReportTypes());
-  //   getLocationAccessToken();
-  // }, []);
+  useEffect(() => {
+    const isAuth = localStorage.getItem("token");
 
-  // useEffect(() => {
-  //   window.addEventListener("storage", () => {
-  //     if (!localStorage.token) dispatch(logout());
-  //   });
-  // }, []);
+    if (isAuth) {
+      dispatch(verify_user(isAuth));
+    }else{
+      dispatch({ type: SET_APP_LOADED, payload: true });
+    }
+  }, []);
 
   useEffect(() => {
     loading
@@ -67,15 +70,39 @@ function App() {
       }
     });
 
-    // return () => {
-    //   setDoneAlerts([]);
-    // };
+    
   }, [alerts]);
-
+  if (!loaded) {
+    return null;
+  }
   return (
     <div className="app">
       <Router>
-        <RenderRoutes routes={ROUTES} />
+        <Switch>
+          <Route
+            path={"/login"}
+            exact={true}
+            render={(props) =>
+              userData ? <Redirect to="/" /> : <Login {...props} />
+            }
+          />
+          <Route
+            path={"/signup"}
+            exact={true}
+            render={(props) =>
+              userData ? <Redirect to="/" /> : <SignIn {...props} />
+            }
+          />
+          <Route
+            path={"/"}
+            // exact={true}
+            render={(props) =>
+              userData ? <Dashboard {...props} /> : <Redirect to="/login" />
+            }
+          />
+
+          {/* <Route path={"/"} render={(props) => <HomeRoute {...props} />} /> */}
+        </Switch>
       </Router>
       {/* <AppRouter /> */}
     </div>

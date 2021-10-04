@@ -1,7 +1,7 @@
 import { setAlert } from "./alertAction";
 import { startLoading, stopLoading } from "./loadingAction";
 import { SET_DETAILS, UPDATE_DETAILS, REMOVE_DETAILS } from '../constants/docDetailsCons';
-import { signUp, login, verifyOtp } from "../../api";
+import { signUp, login, verifyOtp, verifyUSer } from "../../api";
 
 //@desc Create Partner
 const sign_up = (formData, history) => async (dispatch, getState) => {
@@ -41,13 +41,14 @@ const loginUser = (formData, history) => async (dispatch, getState) => {
 
   try {
 
-    const data = await login(formData);
-    localStorage.setItem('token', data);
-
+    const {data} = await login(formData);
+    
+    localStorage.setItem('token', data.encodedToken);
     dispatch(stopLoading(getState().loading.count));
-    dispatch(setAlert("Files Successfully uploaded", "success"));
+    dispatch(setAlert("Welcome Back!", "success"));
     //   const partner = getState().BP.partner;
-    history.push(`/dashboard`);
+    // history.push(`/dashboard`);
+    window.location.reload();
   } catch (err) {
     const errors = err.response.data.errors;
 
@@ -85,5 +86,7 @@ const verify_otp = (formData, history) => async (dispatch, getState) => {
     dispatch(stopLoading(getState().loading.count));
   }
 };
+
+
 
 export { sign_up, loginUser, verify_otp }

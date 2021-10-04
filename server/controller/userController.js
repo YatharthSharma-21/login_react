@@ -87,4 +87,16 @@ const verifyOtp = async (req, res) => {
 
 }
 
-export { addUserDetails, verifyOtp }
+const verifyuser = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    const {id} = req.user;
+    const existUser = await user_details.findOne({ "_id": id });
+    const data = {_id : existUser._id, name: decodeStr(existUser.name), email: decodeStr(existUser.email)}
+    return res.status(200).json({ data});
+}
+
+
+    export { addUserDetails, verifyOtp, verifyuser }

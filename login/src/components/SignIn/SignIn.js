@@ -99,6 +99,7 @@ const SignIn = ({ text }) => {
               </>
             }
             <RoundBtn text="Sign Up" />
+            <a className="text-center col-sm-12 d-block" href={`/login`}>Log In</a>
           </form>
         </div>
       </div>
