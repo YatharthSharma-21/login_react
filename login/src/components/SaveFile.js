@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { uploadFiles } from "../redux/actions/docDetailAction";
+// import { uploadFiles } from "../redux/actions/docDetailAction";
 import { useDispatch } from "react-redux";
 const SaveFile = () => {
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ const SaveFile = () => {
     }
 
     formData.append("length", imagePaths.length);
-    dispatch(uploadFiles(formData));
+    // dispatch(uploadFiles(formData));
   };
 
   return (

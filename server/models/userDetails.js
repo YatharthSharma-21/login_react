@@ -4,6 +4,7 @@ const user_details = mongoose.Schema({
     password: String,
     email: String,
     image: String,
+    otp: String,
     date: { type: Date, default: Date.now },
 })
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-// import { signInUser } from "../../redux/actions/authAction";
+import { loginUser } from "../../redux/actions/docDetailAction";
 
 import "./Login.css";
 
@@ -13,8 +13,7 @@ const Login = ({ text }) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState(""); 
   const [password, setPassword] = useState("");
 
   // const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -24,7 +23,7 @@ const Login = ({ text }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();    
-    // dispatch(signInUser(username, password));
+    dispatch(loginUser({email, password},history));
    
   };
 
@@ -48,7 +47,7 @@ const Login = ({ text }) => {
         <div className="login__card__right">
           <form className="box" onSubmit={handleSubmit}>
             <h2>{text} Login</h2>
-            {text === "Admin" ? (
+          
               <InputGroup
                 label="Email"
                 type="text"
@@ -56,17 +55,8 @@ const Login = ({ text }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 theme="dark"
-              />
-            ) : (
-              <InputGroup
-                label="Username"
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                theme="dark"
-              />
-            )}
+              />          
+            
             <InputGroup
               label="Password"
               type="password"

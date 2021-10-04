@@ -55,6 +55,12 @@ const ROUTES = [
         component: () => <Login />,        
       },   
       {
+        path: "/login",
+        exact: true,
+        Nav: false,
+        component: () => <Login />,        
+      },
+      {
         path: "/signup",
         exact: true,
         Nav: false,
