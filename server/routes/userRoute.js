@@ -1,37 +1,31 @@
 import express from "express";
 import { check } from "express-validator";
-import upload from "../middleware/multer.js";
+import { addUserDetails, verifyOtp, verifyuser, updateUser } from "../controller/userController.js";
 import { auth } from "../middleware/auth.js";
-import { addUserDetails, verifyOtp, verifyuser } from "../controller/userController.js";
+import upload from '../middleware/multer.js';
 
 const router = express.Router();
 
 router.post(
     "/signup",
-    [
-      //auth,
-      // upload.array("files",'length'),
+    [     
       check("name", "User name required"),
       check("email", "email is required"),
       check("password", "password is required"),
     ],
     addUserDetails,
-    (err, req, res, next) => {
-      //multer
+    (err, req, res, next) => {    
       res.status(400).json({ errors: [{ msg: err.message }] });
     }
   );
 
   router.post(
     "/verifyotp",
-    [
-      //auth,
-      // upload.array("files",'length'),
+    [      
       check("otp", "no otp found"),      
     ],
     verifyOtp,
-    (err, req, res, next) => {
-      //multer
+    (err, req, res, next) => {    
       res.status(400).json({ errors: [{ msg: err.message }] });
     }
   );
@@ -39,13 +33,23 @@ router.post(
   router.post(
     "/verifyUser",
     [
-      auth,
-      // upload.array("files",'length'),
-      // check("otp", "no otp found"),      
+      auth,          
     ],
     verifyuser,
-    (err, req, res, next) => {
-      //multer
+    (err, req, res, next) => {  
+      res.status(400).json({ errors: [{ msg: err.message }] });
+    }
+  );
+
+  router.post(
+    "/updateUser",
+    [
+      auth,
+      upload.single("file"),
+         
+    ],
+    updateUser,
+    (err, req, res, next) => {  
       res.status(400).json({ errors: [{ msg: err.message }] });
     }
   );

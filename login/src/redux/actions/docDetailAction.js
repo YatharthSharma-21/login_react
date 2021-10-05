@@ -1,9 +1,9 @@
 import { setAlert } from "./alertAction";
 import { startLoading, stopLoading } from "./loadingAction";
 import { SET_DETAILS, UPDATE_DETAILS, REMOVE_DETAILS } from '../constants/docDetailsCons';
-import { signUp, login, verifyOtp, verifyUSer } from "../../api";
+import { signUp, login, verifyOtp, verifyUSer, updateUser } from "../../api";
 
-//@desc Create Partner
+//@desc User Register
 const sign_up = (formData, history) => async (dispatch, getState) => {
   dispatch(startLoading(getState().loading.count));
   if (formData.password !== formData.cpassword) {
@@ -22,7 +22,7 @@ const sign_up = (formData, history) => async (dispatch, getState) => {
 
 
   } catch (err) {
-   const errors = err.response.data.errors;
+    const errors = err.response.data.errors;
 
     console.log(err);
 
@@ -34,20 +34,18 @@ const sign_up = (formData, history) => async (dispatch, getState) => {
   }
 };
 
-//@desc Create Partner
+//@desc User Login
 const loginUser = (formData, history) => async (dispatch, getState) => {
   dispatch(startLoading(getState().loading.count));
 
-
   try {
 
-    const {data} = await login(formData);
-    
+    const { data } = await login(formData);
+
     localStorage.setItem('token', data.encodedToken);
     dispatch(stopLoading(getState().loading.count));
     dispatch(setAlert("Welcome Back!", "success"));
-    //   const partner = getState().BP.partner;
-    // history.push(`/dashboard`);
+
     window.location.reload();
   } catch (err) {
     const errors = err.response.data.errors;
@@ -87,6 +85,32 @@ const verify_otp = (formData, history) => async (dispatch, getState) => {
   }
 };
 
+//@Desc update user
+const update_user = (formData, history) => async (dispatch, getState) => {
+  dispatch(startLoading(getState().loading.count));
+
+  try {
+    let token = localStorage.getItem('token');
+    const { data } = await updateUser(formData, token);
 
 
-export { sign_up, loginUser, verify_otp }
+    dispatch(stopLoading(getState().loading.count));
+    dispatch(setAlert("Welcome Back!", "success"));
+
+    window.location.reload();
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    console.log(err.response.data);
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+    }
+    //   dispatch({ type: CREATE_PARTNER_ERROR });
+    dispatch(stopLoading(getState().loading.count));
+  }
+};
+
+
+
+export { sign_up, loginUser, verify_otp, update_user }
